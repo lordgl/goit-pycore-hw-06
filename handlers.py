@@ -22,7 +22,10 @@ def add_contact(name: str, phone_number: str, address_book: AddressBook) -> bool
     if not validate_name(name):
         raise ValueError("Invalid name format. Name should contain only alphabetic characters.")
     if not validate_phone_number(phone_number):
-        raise ValueError("Invalid phone number format. It should contain exactly 10 digits.")
+        raise ValueError(
+            "Invalid phone number format. It should start with '+' followed by 7-15 digits or "
+            "'0' followed by 6-14 digits."
+        )
 
     record = address_book.find(name)
     if record is None:
@@ -44,7 +47,10 @@ def add_contact(name: str, phone_number: str, address_book: AddressBook) -> bool
 def change_contact(name: str, new_phone_number: str, address_book: AddressBook) -> bool:
     """Changes the primary phone number of an existing contact."""
     if not validate_phone_number(new_phone_number):
-        raise ValueError("Invalid phone number format. It should contain exactly 10 digits.")
+        raise ValueError(
+            "Invalid phone number format. It should start with '+' followed by 7-15 digits or "
+            "'0' followed by 6-14 digits."
+        )
 
     record = address_book.find(name)
     if record is None:
@@ -65,23 +71,6 @@ def change_contact(name: str, new_phone_number: str, address_book: AddressBook) 
 
 def close() -> str:
     return "Goodbye! Have a great day!"
-
-
-def list_contacts(address_book: AddressBook) -> str:
-    """
-    Lists all contacts in a formatted string.
-    Args:
-        address_book (AddressBook): Storage for contact records.
-    Return:
-        str: A formatted string of all contacts.
-    """
-    if not address_book:
-        return "No contacts found."
-    result_lines = ["Contacts List:"]
-    for name, record in address_book.items():
-        phones = "; ".join(phone.value for phone in record.phones) or "No phone numbers"
-        result_lines.append(f"{name}: {phones}")
-    return "\n".join(result_lines)
 
 
 @input_error
@@ -162,8 +151,14 @@ def handle_all(args: list[str], address_book: AddressBook) -> None:
         ValueError: If unexpected arguments are provided.
     """
     validate_args_count(args, 0, "all")
-    contacts = list_contacts(address_book)
-    print(f"{Fore.YELLOW}{contacts}")
+    if not address_book:
+        raise ValueError("No contacts found.")
+    contacts = ["Contacts List:"]
+    for name, record in address_book.items():
+        phones = "; ".join(phone.value for phone in record.phones) or "No phone numbers"
+        contacts.append(f"{name}: {phones}")
+        print(f"{Fore.YELLOW}{"\n".join(contacts)}{Style.RESET_ALL}")
+
 
 
 @input_error

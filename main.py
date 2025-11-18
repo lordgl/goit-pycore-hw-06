@@ -28,12 +28,12 @@ def main_menu() -> str:
     menu_text = (
         f"{Style.BRIGHT}{Fore.BLUE}Please choose an option:{Style.RESET_ALL}\n"
         f"  {Fore.CYAN}* hello{Style.RESET_ALL} - Greet the user\n"
-        f"  {Fore.CYAN}* add [name] [phone_number]{Style.RESET_ALL} - Add a new contact (10-digit phone)\n"
+        f"  {Fore.CYAN}* add [name] [phone_number]{Style.RESET_ALL} - Add a new contact (+7-15 digits or 0 +6-14 digits)\n"
         f"  {Fore.CYAN}* change [name] [new_phone_number]{Style.RESET_ALL} - Update an existing contact's primary phone\n"
-        f"  {Fore.CYAN}* phone [name]{Style.RESET_ALL} - Retrieve a contact's phone number\n"
+        f"  {Fore.CYAN}* phone [name]{Style.RESET_ALL} - Retrieve a contact's phone number(s)\n"
         f"  {Fore.CYAN}* all{Style.RESET_ALL} - Display all contacts\n"
         f"  {Fore.CYAN}* exit/close/bye/q{Style.RESET_ALL} - Exit the application\n"
-        f"  {Fore.CYAN}* menu{Style.RESET_ALL} - Show this menu again\n"
+        f"  {Fore.CYAN}* menu{Style.RESET_ALL} - Show this menu again"
     )
     return menu_text
 
@@ -82,7 +82,9 @@ def main():
     while True:
         user_input = input(f"{Fore.BLUE}Enter command: {Style.RESET_ALL}")
         command, args = parse_input(user_input)
+        print()
         _handle_command(command, args)
+        print()
 
 
 if __name__ == "__main__":
