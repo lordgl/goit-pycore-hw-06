@@ -157,7 +157,8 @@ def handle_all(args: list[str], address_book: AddressBook) -> None:
     for name, record in address_book.items():
         phones = "; ".join(phone.value for phone in record.phones) or "No phone numbers"
         contacts.append(f"{name}: {phones}")
-        print(f"{Fore.YELLOW}{"\n".join(contacts)}{Style.RESET_ALL}")
+        
+    print(f"{Fore.YELLOW}{"\n".join(contacts)}{Style.RESET_ALL}")
 
 
 
