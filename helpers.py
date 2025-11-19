@@ -1,15 +1,34 @@
+from collections.abc import Iterable
 from functools import wraps
 from colorama import Fore, Style
 import re
 
 
+def style_text(
+    text: str,
+    *,
+    color: str | None = None,
+    bright: bool = False,
+    styles: Iterable[str] | None = None,
+    reset: bool = True,
+) -> str:
+    """Return text wrapped in the provided Colorama styles."""
+    applied_styles: list[str] = []
+    if styles:
+        applied_styles.extend(styles)
+    if bright:
+        applied_styles.append(Style.BRIGHT)
+    if color:
+        applied_styles.append(color)
+
+    prefix = "".join(applied_styles)
+    suffix = Style.RESET_ALL if reset else ""
+    return f"{prefix}{text}{suffix}"
+
+
 def display_error_message(message: str) -> None:
-    """
-    Displays an error message in red color.
-    Args:
-        message (str): The error message to display.
-    """
-    print(f"{Style.BRIGHT}{Fore.RED}{message}{Style.RESET_ALL}")
+    """Displays an error message in red color."""
+    print(style_text(message, color=Fore.RED, bright=True))
 
 
 def input_error(func):
@@ -34,7 +53,7 @@ def display_success_message(message: str) -> None:
     Args:
         message (str): The success message to display.
     """
-    print(f"{Fore.GREEN}{message}{Style.RESET_ALL}")
+    print(style_text(message, color=Fore.GREEN))
 
 
 def parse_input(user_input: str) -> tuple[str, list[str]]:

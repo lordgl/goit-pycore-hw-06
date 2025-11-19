@@ -1,6 +1,6 @@
 from typing import Callable
 
-from colorama import Fore, Style
+from colorama import Fore
 
 from helpers import (
     validate_name,
@@ -8,6 +8,7 @@ from helpers import (
     input_error,
     display_success_message,
     validate_args_count,
+    style_text,
 )
 from instances import AddressBook, Record
 
@@ -83,7 +84,7 @@ def handle_hello(args: list[str]) -> None:
         ValueError: If unexpected arguments are provided.
     """
     validate_args_count(args, 0, "hello")
-    print(f"{Style.BRIGHT}{Fore.CYAN}{greeting()}")
+    print(style_text(greeting(), color=Fore.CYAN, bright=True))
 
 
 @input_error
@@ -134,10 +135,10 @@ def handle_phone(args: list[str], address_book: AddressBook) -> None:
     if record is None:
         raise ValueError(f"Contact {name} not found.")
     phone_numbers = "; ".join(phone.value for phone in record.phones) or "No phone numbers"
-    print(
-        f"{Style.BRIGHT}{Fore.BLUE}{name}"
-        f"{Style.RESET_ALL}{Fore.BLUE}'s phone number(s): {Style.BRIGHT}{phone_numbers}"
-    )
+    name_part = style_text(name, color=Fore.BLUE, bright=True)
+    label_part = style_text("'s phone number(s): ", color=Fore.BLUE)
+    phone_part = style_text(phone_numbers, color=Fore.BLUE, bright=True)
+    print(f"{name_part}{label_part}{phone_part}")
 
 
 @input_error
@@ -158,7 +159,7 @@ def handle_all(args: list[str], address_book: AddressBook) -> None:
         phones = "; ".join(phone.value for phone in record.phones) or "No phone numbers"
         contacts.append(f"{name}: {phones}")
         
-    print(f"{Fore.YELLOW}{"\n".join(contacts)}{Style.RESET_ALL}")
+    print(style_text("\n".join(contacts), color=Fore.YELLOW))
 
 
 
@@ -172,7 +173,7 @@ def handle_exit(args: list[str]) -> None:
         ValueError: If unexpected arguments are provided.
     """
     validate_args_count(args, 0, "exit/close/bye/q")
-    print(f"{Style.BRIGHT}{Fore.MAGENTA}{close()}")
+    print(style_text(close(), color=Fore.MAGENTA, bright=True))
     raise SystemExit
 
 

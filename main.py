@@ -1,8 +1,8 @@
 import colorama
-from colorama import Fore, Style
+from colorama import Fore
 from functools import partial
 
-from helpers import parse_input, display_error_message
+from helpers import parse_input, display_error_message, style_text
 from handlers import (
     handle_hello,
     handle_add,
@@ -25,15 +25,20 @@ def main_menu() -> str:
     Returns:
         str: The main menu string.
     """
+    title = style_text("Please choose an option:", color=Fore.BLUE, bright=True)
+
+    def option(command: str) -> str:
+        return style_text(command, color=Fore.CYAN)
+
     menu_text = (
-        f"{Style.BRIGHT}{Fore.BLUE}Please choose an option:{Style.RESET_ALL}\n"
-        f"  {Fore.CYAN}* hello{Style.RESET_ALL} - Greet the user\n"
-        f"  {Fore.CYAN}* add [name] [phone_number]{Style.RESET_ALL} - Add a new contact (+7-15 digits or 0 +6-14 digits)\n"
-        f"  {Fore.CYAN}* change [name] [new_phone_number]{Style.RESET_ALL} - Update an existing contact's primary phone\n"
-        f"  {Fore.CYAN}* phone [name]{Style.RESET_ALL} - Retrieve a contact's phone number(s)\n"
-        f"  {Fore.CYAN}* all{Style.RESET_ALL} - Display all contacts\n"
-        f"  {Fore.CYAN}* exit/close/bye/q{Style.RESET_ALL} - Exit the application\n"
-        f"  {Fore.CYAN}* menu{Style.RESET_ALL} - Show this menu again"
+        f"{title}\n"
+        f"  {option('* hello')} - Greet the user\n"
+        f"  {option('* add [name] [phone_number]')} - Add a new contact (+7-15 digits or 0 +6-14 digits)\n"
+        f"  {option('* change [name] [new_phone_number]')} - Update an existing contact's primary phone\n"
+        f"  {option('* phone [name]')} - Retrieve a contact's phone number(s)\n"
+        f"  {option('* all')} - Display all contacts\n"
+        f"  {option('* exit/close/bye/q')} - Exit the application\n"
+        f"  {option('* menu')} - Show this menu again"
     )
     return menu_text
 
@@ -80,7 +85,7 @@ def main():
     colorama.init(autoreset=True)
     print(main_menu())
     while True:
-        user_input = input(f"{Fore.BLUE}Enter command: {Style.RESET_ALL}")
+        user_input = input(style_text("Enter command: ", color=Fore.BLUE))
         command, args = parse_input(user_input)
         print()
         _handle_command(command, args)
